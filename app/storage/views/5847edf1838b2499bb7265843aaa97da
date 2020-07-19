@@ -1,0 +1,35 @@
+ 
+
+<?php $__env->startSection('title'); ?> 
+	<?php  
+		echo $page->{"title_".App::getLocale()}
+	?> 
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+	<ol class="breadcrumb">
+		<li><a href="<?php echo Config::get('app.url'); ?>">Home</a></li>
+		<li>
+			<?php  
+				echo $page->{"title_".App::getLocale()}
+			?> 
+		</li>
+	</ol>
+	<div>
+		<h3>
+			<b>
+			<?php  
+				echo $page->{"title_".App::getLocale()}
+			?> 
+			</b>
+		</h3>
+		<p>
+			<?php  
+				echo $page->{"short_desc_".App::getLocale()}
+			?> 
+		</p>
+	</div>
+<?php $__env->stopSection(); ?>
+
+
+<?php echo $__env->make('frontend.layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

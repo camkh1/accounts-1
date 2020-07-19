@@ -1,0 +1,7 @@
+app/config/app.php
+app/config/database.php
+/app/storage
+/public/upload
+/vendor
+/.gitignore
+/nbproject/private/

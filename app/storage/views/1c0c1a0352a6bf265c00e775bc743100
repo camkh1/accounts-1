@@ -1,0 +1,73 @@
+ 
+<?php $__env->startSection('title'); ?> 
+Categories 
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('breadcrumb'); ?>
+<ol class="breadcrumb">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Library</a></li>
+    <li class="active">Data</li>
+</ol>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+<?php echo App::make('FePageController')->mainCategory(); ?>
+
+	<div class="col-lg-10" style="padding-right:%;">
+		<div class="col-lg-2 pull-right" style="padding:0;">
+			<?php echo $__env->make('frontend.partials.categories.right', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		</div>
+		<div class="col-lg-10"  style="padding-left:0;">
+			<div>
+				<?php echo $__env->make('frontend.partials.products.search', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+				<div class="row">
+					<div id="detail_product" data-get-detail-product-url="<?php echo Config::get('app.url'); ?>"></div>
+					<?php 
+					if(count($productsByTransfterType) > 0){
+					?>
+						<?php foreach($productsByTransfterType as $product): ?>
+							<div class="product_list_container">
+								<div class="media commnets product-list-item">
+									<a href="#" data-toggle="modal" data-target="#myModal"
+									onclick="popupDetails.add_popup_detail(<?php echo $product->id; ?>)" class="pull-left product_image">
+										<img alt="" src="<?php echo Config::get('app.url'); ?>upload/product/thumb/<?php echo $product->thumbnail; ?>" class="media-object small">
+										<img alt="" src="<?php echo Config::get('app.url'); ?>upload/product/<?php echo $product->thumbnail; ?>" class="media-object big">
+									</a>
+									
+									<div class="media-body">
+										<strong class="media-heading">
+											<a href="<?php echo Config::get('app.url'); ?>product/details/<?php echo $product->id; ?>">
+											<?php echo str_limit($product->title, $limit = 10, $end = '...'); ?>
+
+											</a>
+										</strong><br />
+										<small><i><?php echo $product->publish_date; ?></i></small><br />
+										<p>
+											<?php echo str_limit($product->description, $limit = 90, $end = '...'); ?><br />
+										</p>
+										<div class="blog-socials">
+											<a href="<?php echo Config::get('app.url'); ?>product/details/<?php echo $product->id; ?>" class="btn btn-primary">$ <?php echo $product->price; ?></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						<?php endforeach; ?>
+					<?php 
+						}else{
+							echo '<h3><center style="color:red;">Product not found!</center></h3>';
+						}
+					?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php echo $__env->make('frontend.partials.products.popup_details', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<script src="<?php echo Config::get('app.url'); ?>/frontend/js/jquery.js"></script>
+<script src="<?php echo Config::get('app.url'); ?>/frontend/js/carouselengine/amazingcarousel.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo Config::get('app.url'); ?>/frontend/js/carouselengine/initcarousel-1.css">
+<script src="<?php echo Config::get('app.url'); ?>/frontend/js/carouselengine/initcarousel-1.js"></script>
+
+
+
+<?php echo $__env->make('frontend.layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

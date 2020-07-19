@@ -1,0 +1,142 @@
+<?php
+date_default_timezone_set ( 'Asia/Phnom_Penh' );
+$currentDate = date ( 'Y-m-d' );
+
+$userClass = new User ();
+$userData = $userClass->getUser($dataStore->user_id);
+$currentUserType =$userData->result->account_type;
+if(!empty($dataStore->sto_url)) {
+	$userHome = @Config::get('app.url').'page/'.$dataStore->sto_url;
+} else {
+	$userHome = @Config::get('app.url').'page/store-'.$dataStore->id;
+}
+?>
+<?php $__env->startSection('title'); ?>
+	<?php if(!empty($dataProductDetail)): ?>
+		<?php echo $dataProductDetail->title; ?>
+
+	<?php endif; ?>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('description'); ?><?php if(!empty($dataProductDetail->description)): ?><?php echo $dataProductDetail->description; ?> <?php endif; ?> <?php $__env->stopSection(); ?>
+<?php $__env->startSection('breadcrumb'); ?>
+	<ol class="breadcrumb">
+		<li><a href="<?php echo Config::get('app.url'); ?>">Home</a></li>
+		<li><a href="#">Library</a></li>
+		<li class="active">Data</li>
+	</ol>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+	<div class="col-lg-8" id="slider">
+			<div class="col-xs-12" >
+		 <!-- Top part of the slider -->
+			<div class="row">
+				<div class="col-sm-8" id="carousel-bounding-box">
+					<div class="carousel slide" id="myCarousel">
+						<!-- Carousel items -->
+						<div class="carousel-inner">
+							<?php if(!empty($dataProductDetail)): ?>
+								<?php 
+					    			$pictures = json_decode($dataProductDetail->pictures, true);
+					    			$i = 0;
+					    		?>
+					    		<?php foreach($pictures as $picture): ?>
+					    			<?php $active = ($i === 0) ? 'active': ''; ?>
+									<div class="<?php echo $active; ?> item" data-slide-number="0">
+										<?php $imageSlide = @$picture['pic'];?>
+										<?php echo HTML::image("image/phpthumb/$imageSlide?p=product&amp;h=250&amp;w=550",$dataProductDetail->title); ?>
+
+									</div>
+									<?php $i++; ?>
+								<?php endforeach; ?>
+							<?php endif; ?>
+						</div><!-- Carousel nav -->
+						<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+							<span class="glyphicon glyphicon-chevron-left"></span>
+						</a>
+						<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+							<span class="glyphicon glyphicon-chevron-right"></span>
+						</a>
+						</div>
+				</div>
+				<div class="col-sm-4" id="carousel-text"></div>
+				<div id="slide-content" style="">
+					<div id="slide-content-0">
+						<h2>
+							<?php if(!empty($dataProductDetail)): ?>
+								<?php echo $dataProductDetail->title; ?>
+
+							<?php endif; ?>
+						</h2>
+						<h3>
+							<?php if(!empty($dataProductDetail)): ?>
+								$<?php echo $dataProductDetail->price; ?>
+
+							<?php endif; ?>
+						</h3>
+						<h4>
+							<?php if(!empty($dataProductDetail)): ?>
+								<?php echo $dataProductDetail->publish_date; ?>
+
+							<?php endif; ?>
+						</h4>
+						<p class="sub-text">
+							<?php if(!empty($dataProductDetail)): ?>
+								<?php echo $dataProductDetail->description; ?>
+
+							<?php endif; ?>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row hidden-xs" id="slider-thumbs">
+			<div class="col-lg-8">
+				<!-- Bottom switcher of slider -->
+				<?php if(!empty($dataProductDetail)): ?>
+				    <ul class="hide-bullets">
+				    	<?php foreach($pictures as $small): ?>
+				    		<?php $thumb = $small['pic']?>
+					        <li class="col-sm-2">
+					            <a class="thumbnail" id="carousel-selector-0">
+					            	<?php echo HTML::image("image/phpthumb/$thumb?p=product&amp;h=55&amp;w=90",$dataProductDetail->title); ?>
+
+					            </a>
+					        </li>
+					    <?php endforeach; ?>
+				    </ul>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>              
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('left'); ?>
+	<?php if(! empty ( $toolView )): ?>
+		<?php foreach( $toolView as $tool ): ?>
+			<?php if($tool->type == 'tool_memeber_status' && $tool->status == 1): ?>
+				<?php echo $__env->make('frontend.modules.store.partials.slidebar.memeber_status', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+			<?php endif; ?>
+		<?php endforeach; ?>
+	<?php endif; ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('right'); ?>
+
+<?php if(! empty ( $toolView )): ?>
+	<?php foreach( $toolView as $tool ): ?>
+		<?php if($tool->type == 'tool_visitor_info' && $tool->status == 1): ?>
+		<?php echo $__env->make('frontend.modules.store.partials.slidebar.tool_visitor', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<?php endif; ?>
+	<?php endforeach; ?>
+<?php endif; ?>
+
+
+<?php if(!empty($banner)): ?>
+    <?php foreach($banner as $ban): ?>
+        <?php if($ban->ban_position == 'rs'): ?>
+            <?php if($ban->ban_enddate >= $currentDate): ?>
+<a class="banner-link" href="<?php echo @$ban->ban_link; ?>" target="_blank"><img
+	src="<?php echo Config::get('app.url'); ?>upload/user-banner/<?php echo $ban->ban_image; ?>"
+	style="width: 100%;" /></a>
+<?php endif; ?> <?php endif; ?> <?php endforeach; ?> <?php endif; ?> <?php $__env->stopSection(); ?>
+<?php echo $__env->make('frontend.modules.store.layout.layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
