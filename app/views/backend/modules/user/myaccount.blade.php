@@ -1,3 +1,5 @@
+@if (Session::get('json'))
+@else
 <!DOCTYPE html>
 <html>
 	<head>
@@ -55,3 +57,4 @@
 		</div>
 	</body>
 </html>
+@endif

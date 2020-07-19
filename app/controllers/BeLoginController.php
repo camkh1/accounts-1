@@ -44,6 +44,108 @@ class BeLoginController extends BaseController {
 	}
 
 	/**
+	 * showLogin: this function display form login page
+	 *
+	 */
+	public function checkMember()
+	{
+		if(Input::has('email')){
+			Session::forget ( 'user' );
+			$input = Input::all();
+			$email = trim(Input::get('email'));
+			$continue = trim(Input::get('continue'));
+			$password = trim($input['password']);
+			$password = trim($input['password']);
+				$rules = array(
+					'email' => 'required',
+					'password' => 'required',
+				);
+			$validator = Validator::make(Input::all(), $rules);
+			if ($validator->passes()) {
+				$user = array('email' => $email, 'password' => $password,'u_status'=>1);
+				$getRemember = false;
+				if(Input::get('remember')) {
+					$getRemember = true;
+				}
+				if (Auth::attempt($user,$getRemember)) {
+					/*check status user*/					
+					$user = Auth::user();
+					$online = Auth::user()->u_online;
+					$uip = Auth::user()->u_ip;
+
+					if(Session::has ( 'user' )) {
+						return Redirect::to('/')->with('invalid',trans('login.Your_used_with_other'));
+					}
+					/*end check status user*/
+
+					Session::put('SESSION_USER_ID', Auth::user()->id);
+					Session::put('SESSION_USER_EMAIL', Auth::user()->email);
+					Session::put('SESSION_USER_TYPE',Auth::user()->u_type);
+					Session::put('SESSION_LOGIN_NAME',Auth::user()->u_name);
+					Session::put('json',1);
+					if (Input::has('remember')) {
+						setcookie('remember_username', Auth::user()->email, time() + (86400 * 30));
+						setcookie('remember_password', $password, time() + (86400 * 30));
+					} elseif (!Input::has('remember')) {
+						$past = time() - 100;
+						setcookie('remember_username', 'gone', $past);
+						setcookie('remember_password', 'gone', $past);
+					}
+
+					if('admin' == Auth::user()->u_type){
+						if(Session::get('continue')) {
+							return Redirect::to(Session::get('continue') . '?id=' . Auth::user()->id);
+						} else {
+							return Redirect::to('admin/dashboard');
+						}
+						
+					}
+				}else {
+					return Redirect::to('/')->with('invalid','User name and Password are not matched!');
+				}
+
+			}else{
+				if($json) {
+					$data = array(
+						'status'=>false,
+					);
+					echo json_encode($data);
+					die;
+				} else {
+					return Redirect::to('/')->withInput()->withErrors($validator);
+				}
+			}
+		}
+
+
+		if (Auth::check()) {
+			$beUser = new BeUserController();
+			$user = Auth::user();
+			$userCheck = $beUser->myAccountDetail($user->id, 'local');
+			$userStatus = json_decode($userCheck);
+			if(empty($userStatus->error)) {
+				$data = array(
+					'id'=>Auth::user()->id,
+					'user'=>Auth::user()->email,
+					'type'=>Auth::user()->u_type,
+					'name'=>Auth::user()->u_name,
+					'status'=>Auth::user()->u_status,
+					'lastActiveTime'=>Auth::user()->lastActiveTime,
+					'u_loc'=>Auth::user()->u_loc,
+				);
+				return View::make('backend.modules.login.member')->with('user', $data);
+			} else {
+				$data = array(
+					'status'=>false,
+				);
+				return View::make('backend.modules.login.member')->with('user', $data);
+			}
+		} else {
+			return View::make('backend.modules.login.member')->with('user', false);
+		}
+	}
+
+	/**
 	 * doLogin: this function validation username and password
 	 * @return true | false
 	 *
@@ -63,6 +165,7 @@ class BeLoginController extends BaseController {
 			Session::forget ( 'user' );
 			$input = Input::all();
 			$email = trim(Input::get('email'));
+			$json = trim(Input::get('json'));
 			$continue = trim(Input::get('continue'));
 			if($continue) {
 				Session::put('continue', $continue);
@@ -104,6 +207,7 @@ class BeLoginController extends BaseController {
 					Session::put('SESSION_USER_EMAIL', Auth::user()->email);
 					Session::put('SESSION_USER_TYPE',Auth::user()->u_type);
 					Session::put('SESSION_LOGIN_NAME',Auth::user()->u_name);
+					Session::put('json',1);
 					if (Input::has('remember')) {
 						setcookie('remember_username', Auth::user()->email, time() + (86400 * 30));
 						setcookie('remember_password', $password, time() + (86400 * 30));
@@ -137,7 +241,15 @@ class BeLoginController extends BaseController {
 				}
 
 			}else{
-				return Redirect::to('/')->withInput()->withErrors($validator);
+				if($json) {
+					$data = array(
+						'status'=>false,
+					);
+					echo json_encode($data);
+					die;
+				} else {
+					return Redirect::to('/')->withInput()->withErrors($validator);
+				}
 			}
 		}
 

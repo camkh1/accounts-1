@@ -14,6 +14,7 @@ Route::get('/', 'BeLoginController@showLogin');
 Route::post('/admin/login', 'BeLoginController@doLogin');
 Route::get('/register', 'BeLoginController@creatAccount');
 Route::get('/check', 'BeLoginController@checkAccount');
+Route::any('/member', 'BeLoginController@checkMember');
 
 Route::get('/send-forget-password', 'BeLoginController@sendResetPassword');
 Route::post('/send-forget-password', 'BeLoginController@sendResetPassword');
@@ -32,10 +33,12 @@ Route::get('/user-cron','BeUserController@accountStatus');
 
 
 Route::get('/admin/dashboard', 'BeLoginController@dashboard'); 
-Route::get('/admin/licence','BeLicenceController@listlicence');
 Route::get('/admin/users','BeUserController@listUser');
 Route::get('/logout','BeLoginController@doLogout'); 
 Route::get('/myaccount','BeUserController@myAccount');
+
+Route::get('/admin/licence','BeLicenceController@listlicence');
+Route::any('/admin/licence/add','BeLicenceController@addlicence');
 
 //=============Routes for front end page==============
 

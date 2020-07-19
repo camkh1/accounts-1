@@ -47,7 +47,6 @@
 		      <div class="form-group">
 		        <div class="input-icon"> <i class="icon-lock"></i>
 		          <input type="password" name="password" class="form-control" placeholder="Password" data-rule-required="true" data-msg-required="Please enter your password."/>
-		        </div>
 		      </div>
 		      <div class="form-actions">
 		        <label class="checkbox pull-left">

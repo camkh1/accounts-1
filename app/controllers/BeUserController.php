@@ -338,6 +338,19 @@ class BeUserController extends BaseController {
 	 */
 	public function myAccount() {
 		$user = $this->user->getCurrentUser();
+		if(Session::get('json')) {
+			$data = array(
+				'id'=>$user->id,
+				'user'=>$user->email,
+				'type'=>$user->u_type,
+				'name'=>$user->u_name,
+				'status'=>$user->u_status,
+				'lastActiveTime'=>$user->lastActiveTime,
+				'u_loc'=>$user->u_loc,
+			);
+			echo json_encode($data);
+			die;
+		}
 		return View::make('backend.modules.user.myaccount')->with('user', $user);
 	}
 
