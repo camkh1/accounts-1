@@ -52,7 +52,7 @@
 		        <label class="checkbox pull-left">
 		          <input type="checkbox" class="uniform" name="remember">
 		          Remember me</label>
-		        <button type="submit" name="btnLogin" value="Login" class="submit btn btn-primary pull-right"> Sign In <i class="icon-angle-right"></i> </button>
+		        <button type="submit" id="submittbn" name="btnLogin" value="Login" class="submit btn btn-primary pull-right"> Sign In <i class="icon-angle-right"></i> </button>
 		      </div>
 		      <input type="hidden" name="continue" value="{{Input::get('continue')}}"/>
 		    </form>

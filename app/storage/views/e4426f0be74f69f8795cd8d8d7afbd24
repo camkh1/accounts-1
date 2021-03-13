@@ -1,4 +1,6 @@
 <?php if($user): ?>
+<?php echo header("Access-Control-Allow-Origin: *"); ?>
+
 <?php echo json_encode($user); ?>
 
 <?php else: ?>
