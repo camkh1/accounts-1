@@ -1,3 +1,0 @@
-<div class="crumbs">
-		<?php echo $__env->yieldContent('breadcrumb'); ?>
-</div>

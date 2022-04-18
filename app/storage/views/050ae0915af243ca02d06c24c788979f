@@ -1,5 +1,0 @@
-
-<?php foreach($categoryList as $row): ?>
-<?php echo $row; ?>
-
-<?php endforeach; ?>
